@@ -1,3 +1,5 @@
+const cTable = require('console.table');
+
 const mysql = require('mysql')
 const dbConfig = require('./dbconfig.json')
 
@@ -14,11 +16,10 @@ connection.connect()
 connection.query('SELECT * FROM employee', (err, res, fields) => {
   if (err) throw err
 
-  console.log(res)
+  console.table(res)
 })
 
 connection.end()
-
 
 // Manage Departments
 // Add
