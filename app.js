@@ -1,4 +1,5 @@
-const cTable = require('console.table');
+const cTable = require('console.table')
+const inquirer = require('inquirer')
 
 const mysql = require('mysql')
 const dbConfig = require('./dbconfig.json')
@@ -11,15 +12,30 @@ const connection = mysql.createConnection({
   port: dbConfig.db_port || 3306
 })
 
-connection.connect()
+// connection.connect()
 
-connection.query('SELECT * FROM employee', (err, res, fields) => {
-  if (err) throw err
 
-  console.table(res)
-})
+// connection.query('SELECT * FROM employee', (err, res, fields) => {
+//   if (err) throw err
 
-connection.end()
+//   console.table(res)
+// })
+
+// connection.end()
+
+
+const testQuestion = {
+  type: 'input',
+  name: 'whatsUp',
+  message: 'What\'s up?',
+  default: 'imdumb'
+}
+
+inquirer.prompt([testQuestion])
+  .then((answers) => {
+    console.log(answers)
+    console.log('bah bah', answers)
+  })
 
 // Manage Departments
 // Add
