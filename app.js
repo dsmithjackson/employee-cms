@@ -3,6 +3,7 @@ const inquirer = require('inquirer')
 
 const mysql = require('mysql')
 const dbConfig = require('./dbconfig.json')
+// const question = require('./question-sets/mainQuestions')
 
 const connection = mysql.createConnection({
   host: dbConfig.db_host,
@@ -12,8 +13,7 @@ const connection = mysql.createConnection({
   port: dbConfig.db_port || 3306
 })
 
-// connection.connect()
-
+connection.connect()
 
 // connection.query('SELECT * FROM employee', (err, res, fields) => {
 //   if (err) throw err
@@ -23,19 +23,18 @@ const connection = mysql.createConnection({
 
 // connection.end()
 
+// const testQuestion = {
+//   type: 'input',
+//   name: 'whatsUp',
+//   message: 'What\'s up?',
+//   default: 'imdumb'
+// }
 
-const testQuestion = {
-  type: 'input',
-  name: 'whatsUp',
-  message: 'What\'s up?',
-  default: 'imdumb'
-}
-
-inquirer.prompt([testQuestion])
-  .then((answers) => {
-    console.log(answers)
-    console.log('bah bah', answers)
-  })
+// inquirer.prompt([testQuestion])
+//   .then((answers) => {
+//     console.log(answers)
+//     console.log('bah bah', answers)
+//   })
 
 // Manage Departments
 // Add
@@ -55,6 +54,85 @@ inquirer.prompt([testQuestion])
 // Delete
 // Change Managers
 
-
 // Helpers
 // View Total Budgets
+
+const questionSets = {
+  employees: require('./employeeOptions.js'),
+  departments: require('./departmentOptions.js')
+}
+
+const choiceList = Object.keys(questionSets)
+choiceList.push(
+  new inquirer.Separator(),
+  {
+    name: 'Exit',
+    value: 'DONE'
+  })
+
+const questions = [
+  {
+    type: 'list',
+    name: 'what',
+    message: 'what are you doin',
+    choices: choiceList
+  },
+  {
+    type: 'list',
+    name: 'option',
+    message: 'MANAGE EMPLOYEES',
+    choices: questionSets.employees.choices,
+    when: (answers) => {
+      return answers.what === 'employees'
+    }
+  },
+  {
+    type: 'list',
+    name: 'option',
+    message: 'MANAGE DEPARTMENTS',
+    choices: ['view', 'add', 'back'],
+    when: (answers) => {
+      return answers.what === 'departments'
+    }
+  },
+  {
+    type: 'list',
+    name: 'option',
+    message: 'MANAGE ROLES',
+    choices: ['view', 'add', 'back'],
+    when: (answers) => {
+      return answers.what === 'roles'
+    }
+  }
+]
+
+function secondaryAsk(what, option, connection) {
+  questionSets[what].methods[option](connection)
+    .then((next) => {
+      switch (next) {
+        case 'top':
+          ask()
+          break
+        case 'same':
+          secondaryAsk(what, option, connection)
+          break
+        default:
+          console.log('Shouldn\'t be here')
+          break
+      }
+    })
+}
+
+function ask () {
+  console.clear()
+  inquirer.prompt(questions).then((answers) => {
+    if (answers.what === 'DONE') {
+      process.exit()
+    }
+    // questionSets[answers.what].methods[answers.option](connection)
+    console.log(answers)
+    secondaryAsk(answers.what, answers.option, connection)
+  })
+}
+
+ask()
