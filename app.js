@@ -108,7 +108,8 @@ const questions = [
 
 function secondaryAsk(what, option, connection) {
   console.log(what, option)
-  questionSets[what].methods[option](connection)
+  // TODO: Come up with something better than passing ask
+  questionSets[what].methods[option](connection, ask)
     .then((next) => {
       switch (next) {
         case 'top':
@@ -127,7 +128,7 @@ function secondaryAsk(what, option, connection) {
 }
 
 function ask () {
-  console.clear()
+  // console.clear()
   inquirer.prompt(questions).then((answers) => {
     if (answers.what === 'DONE') {
       process.exit()
