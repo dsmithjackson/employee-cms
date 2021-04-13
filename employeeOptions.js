@@ -30,7 +30,7 @@ const methods = {
     // return 'same'
   },
   DELETE_EMPLOYEE: function(connection) {
-    console.log('Calls Delete Employee)
+    console.log('Calls Delete Employee')
   },
   BACK: async function () {
     return 'top'
