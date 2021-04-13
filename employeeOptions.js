@@ -22,14 +22,15 @@ const choices = [
 ]
 
 const methods = {
-  ALL_EMPLOYEES: function (connection) {
+  ALL_EMPLOYEES: async function (connection) {
     console.log('Call All Employees')
+    return 'same'
   },
   EMPLOYEE_BY_DEPARTMENT: async function (connection) {
     console.log('Calls Employees By Department')
     // return 'same'
   },
-  DELETE_EMPLOYEE: function(connection) {
+  DELETE_EMPLOYEE: async function(connection) {
     console.log('Calls Delete Employee')
   },
   BACK: async function () {

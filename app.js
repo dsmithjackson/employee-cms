@@ -107,6 +107,7 @@ const questions = [
 ]
 
 function secondaryAsk(what, option, connection) {
+  console.log(what, option)
   questionSets[what].methods[option](connection)
     .then((next) => {
       switch (next) {
@@ -114,7 +115,9 @@ function secondaryAsk(what, option, connection) {
           ask()
           break
         case 'same':
-          secondaryAsk(what, option, connection)
+          // TODO: Fix handling infinte loop
+          ask()
+          // secondaryAsk(what, option, connection)
           break
         default:
           console.log('Shouldn\'t be here')
